@@ -13,15 +13,19 @@ function saveToDos(){
 function deleteToDo(event){
     const li = event.target.parentElement;
     li.remove();
+    toDos = toDos.filter((toDo) => toDo.id !== parseInt(li.id));
+    saveToDos();
 }
 
 function paintToDo(newTodo)
 {
     const li = document.createElement('li');
+    li.id = newTodo.id
     const span = document.createElement('span');
-    span.innerText = newTodo;
-    const button = document.createElement('button');
+    span.innerText = newTodo.text;
+    const button = document.createElement('span');
     button.innerText = "❌";
+    button.className = "deleteBut"
     button.addEventListener('click', deleteToDo);
     li.appendChild(span);
     li.appendChild(button);
@@ -32,8 +36,12 @@ function hadleToDoSubmit(event) {
     event.preventDefault();
     const newTodo = toDoInput.value;
     toDoInput.value = "";
-    toDos.push(newTodo);
-    paintToDo(newTodo);
+    const newTodoObj = {
+        text:newTodo,
+        id:Date.now(),
+    }
+    toDos.push(newTodoObj);
+    paintToDo(newTodoObj);
     saveToDos();
 }
 
@@ -45,4 +53,8 @@ if(savedToDos) {
     const parsedToDOs = JSON.parse(savedToDos);
     toDos = parsedToDOs;
     parsedToDOs.forEach(paintToDo);
+}
+
+function showToDos() {
+    toDoList.classList.toggle("hidden");
 }
